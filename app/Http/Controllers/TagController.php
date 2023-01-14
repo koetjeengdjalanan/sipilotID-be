@@ -4,18 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTagRequest;
 use App\Http\Requests\UpdateTagRequest;
+use App\Http\Resources\PostCollection;
+use App\Http\Resources\TagResource;
+use App\Libraries\ApiResponse;
+use App\Models\Post;
 use App\Models\Tag;
 
 class TagController extends Controller
 {
     /**
+     * @author Martin Sambulare <martin@rakhasa.com>
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        //
+        $res = TagResource::collection(Tag::all());
+        return ApiResponse::success('', $res);
     }
 
     /**
@@ -40,14 +46,21 @@ class TagController extends Controller
     }
 
     /**
+     * !This Shit Is Broken
      * Display the specified resource.
      *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
+     * @param  string  $slug
+     * @return PostCollection
      */
-    public function show(Tag $tag)
+    public function show(string $slug)
     {
-        //
+        $perPage = request()->filled('perPage') ? request()->perPage : null;
+        // $tag     = Tag::where('slug', $slug)->first();
+        $res = Post::with(['tags', 'author', 'category'])->orWhereHas('tags', function ($q) use ($slug) {
+            $q->where('tags', $slug);
+        })->get();
+        dump($res);
+        return new PostCollection($res);
     }
 
     /**

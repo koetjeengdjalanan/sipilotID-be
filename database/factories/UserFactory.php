@@ -17,8 +17,10 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $name = fake()->unique()->name();
         return [
-            'name'              => fake()->name(),
+            'name'              => $name,
+            'username'          => Str::of($name)->replace([' ', '.'], '')->lower(),
             'email'             => fake()->unique()->safeEmail(),
             'email_verified_at' => (rand(0, 9) <= 4) ? now() : null,
             'password'          => bcrypt('testing123'),

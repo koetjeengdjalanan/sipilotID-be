@@ -2,85 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostCollection;
+use App\Http\Resources\PostResource;
+use App\Libraries\ApiResponse;
 use App\Models\Post;
 
 class PostController extends Controller
 {
+    protected $post;
+    public function __construct()
+    {
+        $this->post = Post::with(['tags', 'author', 'category'])->orderByDesc('published_date');
+    }
+
     /**
-     * Display a listing of the resource.
+     * @author Martin Sambulare <martin@rakhasa.com>
+     * Return Paginated Post for Posts
      *
-     * @return \Illuminate\Http\Response
+     * @return PostCollection
      */
     public function index()
     {
-        //
+        $perPage = request()->filled('perPage') ? request()->perPage : null;
+        $res     = new PostCollection($this->post->paginate($perPage));
+        return $res;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @author Martin Sambulare <martin@rakhasa.com>
+     * Show one Posts, Based on slug
      *
-     * @return \Illuminate\Http\Response
+     * @param string $slug
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function show(string $slug)
     {
-        //
+        $query = $this->post->where('slug', $slug)->first();
+        $res   = new PostResource($query);
+        return ApiResponse::success('', $res);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @author Martin Sambulare <martin@rakhasa.com>
+     * Return Random Post
      *
-     * @param  \App\Http\Requests\StorePostRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StorePostRequest $request)
+    public function random()
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Post  $Post
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Post $Post)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Post  $Post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $Post)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdatePostRequest  $request
-     * @param  \App\Models\Post  $Post
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdatePostRequest $request, Post $Post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Post  $Post
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Post $Post)
-    {
-        //
+        // dd($this->post->first());
+        $res = $this->post->get()->random();
+        return ApiResponse::success('', new PostResource($res));
     }
 }
