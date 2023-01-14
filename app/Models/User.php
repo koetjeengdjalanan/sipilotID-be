@@ -4,7 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUuids;
+    use HasApiTokens, HasFactory, Notifiable, HasUlids;
 
     public $incrementing = false;
     protected $keyType   = 'string';
@@ -47,8 +47,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function maincontent()
+    public function mainContent()
     {
         return $this->hasMany(MainContent::class);
+    }
+    public function post()
+    {
+        return $this->hasMany(Post::class);
+    }
+    public function category()
+    {
+        return $this->hasMany(Category::class);
+    }
+    public function tag()
+    {
+        return $this->hasMany(Tag::class);
     }
 }

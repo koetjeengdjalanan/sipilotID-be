@@ -13,12 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('main_contents', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('section');
-            $table->text('content');
-            $table->string('image');
+            $table->string('title');
+            $table->string('slug')->unique();
             $table->foreignUlid('user_id')->constrained();
+            $table->foreignUlid('category_id')->nullable()->constrained();
+            $table->text('excerpt');
+            $table->mediumText('body')->nullable();
+            $table->timestamp('published_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -31,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('main_contents');
+        Schema::dropIfExists('posts');
     }
 };

@@ -7,22 +7,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MainContent extends Model
+class Post extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
 
     public $incrementing = false;
     protected $keyType   = 'string';
-    /**
-     * Non fillable Data Column List
-     * @var array<int, string>
-     */
-    protected $guarded = [
+    protected $guarded   = [
         'created_at',
     ];
 
     public function author()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
     }
 }

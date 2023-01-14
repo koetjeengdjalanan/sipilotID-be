@@ -17,12 +17,13 @@ class MainContentFactory extends Factory
      */
     public function definition()
     {
-        $userId = \App\Models\User::all()->pluck('id')->toArray();
+        $userId = Arr::random(\App\Models\User::all()->pluck('id')->toArray());
+        dump($userId);
         return [
             'section' => fake()->name(),
             'content' => fake()->randomHtml(),
             'image'   => fake()->imageUrl(1920, 1080, null, true, null, false),
-            'user_id' => Arr::random($userId),
+            'user_id' => $userId,
         ];
     }
 }
