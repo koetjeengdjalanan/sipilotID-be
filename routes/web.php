@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPanelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -11,8 +12,12 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::get('', [AdminPanelController::class, 'dashboard'])->name('dashboard');
 });

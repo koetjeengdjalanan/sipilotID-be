@@ -18,6 +18,7 @@ class PostResource extends JsonResource
         $data = parent::toArray($request);
         return [
             'title'        => $data['title'],
+            'thumbnail'    => $this->media->pluck('path'),
             'slug'         => $data['slug'],
             'published_at' => $data['published_date'],
             'author'       => new AuthorResource($data['author']),

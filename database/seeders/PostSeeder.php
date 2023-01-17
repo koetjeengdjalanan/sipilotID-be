@@ -14,6 +14,11 @@ class PostSeeder extends Seeder
      */
     public function run()
     {
-        Post::factory(250)->create();
+        $posts = Post::factory(250)->create();
+        foreach ($posts as $key => $post) {
+            $post->media()->create([
+                'path' => 'https://loremflickr.com/640/480',
+            ]);
+        }
     }
 }

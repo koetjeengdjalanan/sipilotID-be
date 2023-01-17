@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTagRequest;
 use App\Http\Requests\UpdateTagRequest;
-use App\Http\Resources\PostCollection;
+use App\Http\Resources\PostPaginateCollection;
 use App\Http\Resources\TagResource;
 use App\Libraries\ApiResponse;
-use App\Models\Post;
 use App\Models\Tag;
 
 class TagController extends Controller
@@ -46,21 +45,17 @@ class TagController extends Controller
     }
 
     /**
-     * !This Shit Is Broken
+     * @author Martin Sambulare <martin@rakhasa.com>
      * Display the specified resource.
      *
      * @param  string  $slug
-     * @return PostCollection
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(string $slug)
     {
         $perPage = request()->filled('perPage') ? request()->perPage : null;
-        // $tag     = Tag::where('slug', $slug)->first();
-        $res = Post::with(['tags', 'author', 'category'])->orWhereHas('tags', function ($q) use ($slug) {
-            $q->where('tags', $slug);
-        })->get();
-        dump($res);
-        return new PostCollection($res);
+        $res     = Tag::where('slug', $slug)->first()->posts()->with(['author', 'category', 'tags', 'media'])->paginate($perPage);
+        return ApiResponse::success('', new PostPaginateCollection($res));
     }
 
     /**
