@@ -39,7 +39,8 @@ class PostController extends Controller
     public function show(string $slug)
     {
         $query = $this->post->where('slug', $slug)->first();
-        $res   = new PostResource($query);
+        $query->visitCounter()->increment();
+        $res = new PostResource($query);
         return ApiResponse::success('', $res);
     }
 
@@ -53,6 +54,7 @@ class PostController extends Controller
     {
         // dd($this->post->first());
         $res = $this->post->get()->random();
+        $res->visitCounter()->increment();
         return ApiResponse::success('', new PostResource($res));
     }
 }

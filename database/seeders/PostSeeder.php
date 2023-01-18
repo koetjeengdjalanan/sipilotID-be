@@ -20,5 +20,8 @@ class PostSeeder extends Seeder
                 'path' => 'https://loremflickr.com/640/480',
             ]);
         }
+        Post::all()->random(rand(23, 75))->each(function ($item, $key) {
+            $item->delete();
+        });
     }
 }

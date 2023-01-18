@@ -28,7 +28,7 @@ class PostFactory extends Factory
             'category_id'    => $category,
             'excerpt'        => fake()->sentences(25, true),
             'body'           => fake()->randomHtml(5, 10),
-            'published_date' => (rand(1, 9) > 3) ? fake()->dateTimeBetween('now', '1 month') : null,
+            'published_date' => (rand(1, 9) > 3) ? fake()->dateTimeBetween('-2 months', 'now') : null,
         ];
     }
 }

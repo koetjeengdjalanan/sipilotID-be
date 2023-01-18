@@ -25,4 +25,12 @@ class Category extends Model
     {
         return $this->hasMany(Post::class);
     }
+    public function visitCounter()
+    {
+        return visits($this);
+    }
+    public function visits()
+    {
+        return visits($this)->relation();
+    }
 }

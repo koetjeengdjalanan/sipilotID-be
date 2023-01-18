@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Post;
 use Illuminate\Console\Command;
 
 class TestCommand extends Command
@@ -27,7 +28,8 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        dump('this and that');
+        $visit = Post::latest()->paginate();
+        dump($visit);
         return Command::SUCCESS;
     }
 }

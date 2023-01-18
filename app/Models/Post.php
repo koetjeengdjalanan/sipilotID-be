@@ -33,4 +33,12 @@ class Post extends Model
     {
         return $this->morphMany(Media::class, 'mediable');
     }
+    public function visitCounter()
+    {
+        return visits($this);
+    }
+    public function visits()
+    {
+        return visits($this)->relation();
+    }
 }
