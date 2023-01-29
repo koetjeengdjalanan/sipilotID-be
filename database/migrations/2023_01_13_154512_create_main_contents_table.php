@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('main_contents', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('section');
-            $table->text('content');
-            $table->string('image');
-            $table->foreignUlid('user_id')->constrained();
+            $table->smallInteger('section');
+            $table->text('content')->nullable();
+            $table->string('image')->nullable();
+            $table->foreignUuid('user_id')->constrained();
             $table->softDeletes();
             $table->timestamps();
         });

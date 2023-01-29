@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Post;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 
 class TestCommand extends Command
 {
@@ -28,8 +28,13 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        $visit = Post::latest()->paginate();
-        dump($visit);
+        $availableType = [
+            'text',
+            'listbox',
+            'datetime',
+        ];
+        $type = Arr::random($availableType);
+        dump($type, gettype($type));
         return Command::SUCCESS;
     }
 }

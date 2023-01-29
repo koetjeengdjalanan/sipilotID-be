@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -13,19 +14,23 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory()->create([
+        $roles    = Role::all();
+        $rootUser = \App\Models\User::factory()->create([
             'name'     => 'The Watcher',
             'username' => 'thewatcher',
             'email'    => 'iam@watching.you',
-            'password' => '$2y$10$XppvZCYhGaZ7jCN20GVAg.F5txQVzXwcY5hx2ryBENbgjSp36nzAa',
-        ])->media()->create([
-            'path' => 'https://loremflickr.com/640/480',
+            'password' => bcrypt('testing123'),
         ]);
+        $rootUser->media()->create([
+            'path' => 'https://source.unsplash.com/random/?selfie',
+        ]);
+        $rootUser->assignRole($roles[0]);
         $users = \App\Models\User::factory(10)->create();
         foreach ($users as $key => $user) {
             $user->media()->create([
-                'path' => 'https://loremflickr.com/640/480',
+                'path' => 'https://source.unsplash.com/random/?selfie',
             ]);
+            $user->assignRole($roles->random());
         }
     }
 }

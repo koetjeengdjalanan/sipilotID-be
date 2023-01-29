@@ -17,7 +17,7 @@ class PostSeeder extends Seeder
         $posts = Post::factory(250)->create();
         foreach ($posts as $key => $post) {
             $post->media()->create([
-                'path' => 'https://loremflickr.com/640/480',
+                'path' => 'https://source.unsplash.com/random/480%C3%97640?lansdcape',
             ]);
         }
         Post::all()->random(rand(23, 75))->each(function ($item, $key) {

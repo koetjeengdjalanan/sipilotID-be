@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('post_tag', function (Blueprint $table) {
             $table->foreignUuid('post_id');
-            $table->foreignUlid('tag_id');
+            $table->foreignUuid('tag_id');
 
             $table->primary(['post_id', 'tag_id']);
 

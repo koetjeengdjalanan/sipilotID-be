@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tags', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            $table->uuid('id')->primary();
             $table->string('title');
             $table->string('slug');
-            $table->foreignUlid('user_id')->constrained();
+            $table->foreignUuid('user_id')->constrained();
             $table->timestamps();
         });
     }

@@ -10,11 +10,11 @@
       'Visits' => 'Awssat\\Visits\\Visits',
     ),
   ),
-  'laravel/sail' => 
+  'barryvdh/laravel-ide-helper' => 
   array (
     'providers' => 
     array (
-      0 => 'Laravel\\Sail\\SailServiceProvider',
+      0 => 'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
     ),
   ),
   'laravel/sanctum' => 
@@ -52,6 +52,18 @@
       0 => 'Termwind\\Laravel\\TermwindServiceProvider',
     ),
   ),
+  'php-open-source-saver/jwt-auth' => 
+  array (
+    'aliases' => 
+    array (
+      'JWTAuth' => 'PHPOpenSourceSaver\\JWTAuth\\Facades\\JWTAuth',
+      'JWTFactory' => 'PHPOpenSourceSaver\\JWTAuth\\Facades\\JWTFactory',
+    ),
+    'providers' => 
+    array (
+      0 => 'PHPOpenSourceSaver\\JWTAuth\\Providers\\LaravelServiceProvider',
+    ),
+  ),
   'spatie/laravel-ignition' => 
   array (
     'providers' => 
@@ -61,6 +73,20 @@
     'aliases' => 
     array (
       'Flare' => 'Spatie\\LaravelIgnition\\Facades\\Flare',
+    ),
+  ),
+  'spatie/laravel-permission' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spatie\\Permission\\PermissionServiceProvider',
+    ),
+  ),
+  'spatie/laravel-query-builder' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spatie\\QueryBuilder\\QueryBuilderServiceProvider',
     ),
   ),
   'spatie/laravel-referer' => 

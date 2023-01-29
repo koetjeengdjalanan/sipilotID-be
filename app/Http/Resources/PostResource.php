@@ -17,10 +17,12 @@ class PostResource extends JsonResource
     {
         $data = parent::toArray($request);
         return [
+            'id'           => $data['id'],
             'title'        => $data['title'],
             'thumbnail'    => $this->media->pluck('path'),
             'slug'         => $data['slug'],
             'published_at' => $data['published_date'],
+            'updated_at'   => $data['updated_at'],
             'author'       => new AuthorResource($data['author']),
             'category'     => new CategoryResource($data['category']),
             'tags'         => TagResource::collection($data['tags']),

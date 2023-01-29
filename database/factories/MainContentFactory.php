@@ -18,9 +18,9 @@ class MainContentFactory extends Factory
     public function definition()
     {
         $userId = Arr::random(\App\Models\User::all()->pluck('id')->toArray());
-        dump($userId);
+        // dump($userId);
         return [
-            'section' => fake()->name(),
+            'section' => fake()->randomDigit(),
             'content' => fake()->randomHtml(),
             'image'   => fake()->imageUrl(1920, 1080, null, true, null, false),
             'user_id' => $userId,
