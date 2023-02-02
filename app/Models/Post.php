@@ -61,6 +61,12 @@ class Post extends Model implements Searchable
         'created_at',
     ];
 
+    protected $casts = [
+        'published_date' => 'datetime:Uv',
+        'updated_at'     => 'datetime:Uv',
+        'deleted_at'     => 'datetime:Uv',
+    ];
+
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

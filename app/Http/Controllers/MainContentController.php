@@ -14,10 +14,18 @@ class MainContentController extends Controller
      */
     public function index()
     {
-        $res = MainContent::all()
+        $content = MainContent::all();
+        $content->each(function ($vis) {
+            if (env('APP_ENV', 'local') !== 'local') {
+                visits($vis)->increment();
+            } else {
+                visits($vis)->forceIncrement(rand(3, 20));
+            }
+        });
+        $res = $content
             ->makeHidden(['id', 'section', 'deleted_at', 'created_at', 'updated_at', 'user_id'])
             ->sortBy('section')->groupBy('section')
             ->map(fn($sec) => $sec->sortBy('updated_at')->first());
-        return ApiResponse::success('', $res);
+        return ApiResponse::success('', $res->toArray());
     }
 }

@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('main_contents', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->smallInteger('section');
-            $table->text('content')->nullable();
+            $table->string('title');
+            $table->text('body')->nullable();
             $table->string('image')->nullable();
             $table->foreignUuid('user_id')->constrained();
             $table->softDeletes();

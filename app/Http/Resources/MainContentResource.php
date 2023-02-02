@@ -16,9 +16,11 @@ class MainContentResource extends ResourceCollection
     {
         $data = parent::toArray($request);
         return collect([
-            'content' => $data['section'],
-            'image'   => $data['image'],
-            'author'  => $request->author->pluck('name'),
+            'id'     => $data['id'],
+            'title'  => $data['title'],
+            'body'   => $data['body'],
+            'image'  => $data['image'],
+            'author' => $request->author->pluck('name'),
         ]);
     }
 }

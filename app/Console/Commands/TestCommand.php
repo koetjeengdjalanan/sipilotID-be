@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Http;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 
 class TestCommand extends Command
 {
@@ -28,13 +28,7 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        $availableType = [
-            'text',
-            'listbox',
-            'datetime',
-        ];
-        $type = Arr::random($availableType);
-        dump($type, gettype($type));
+        dd(str_replace(array("\t", "\n"), '', Http::get('https://loripsum.net/api/2/short/link/ul/ol/dl/bq/decorate')->body()));
         return Command::SUCCESS;
     }
 }

@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
+use Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MainContent>
@@ -21,8 +23,9 @@ class MainContentFactory extends Factory
         // dump($userId);
         return [
             'section' => fake()->randomDigit(),
-            'content' => fake()->randomHtml(),
-            'image'   => fake()->imageUrl(1920, 1080, null, true, null, false),
+            'title'   => Str::title(fake()->words(rand(3, 7), true)),
+            'body'    => str_replace(array("\t", "\n"), '', Http::get('https://loripsum.net/api/2/short/link/ul/ol/dl/bq/decorate')->body()),
+            'image'   => 'https://source.unsplash.com/random/640%C3%97480',
             'user_id' => $userId,
         ];
     }

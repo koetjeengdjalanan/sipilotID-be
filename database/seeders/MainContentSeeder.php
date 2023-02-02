@@ -13,6 +13,9 @@ class MainContentSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\MainContent::factory(10)->create();
+        $contents = \App\Models\MainContent::factory(10)->create();
+        $contents->each(function ($content) {
+            visits($content)->forceIncrement(50);
+        });
     }
 }

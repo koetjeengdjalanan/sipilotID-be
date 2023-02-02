@@ -6,6 +6,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MainContentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TagController;
+use App\Libraries\ApiResponse;
+use App\Models\MailSubscription;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -52,7 +54,7 @@ Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
     Route::get('/{slug}', [CategoryController::class, 'show'])->name('show');
 });
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:api'], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('', [AdminPanelController::class, 'dashboard'])->name('dashboard');
     Route::get('/formList', [AdminPanelController::class, 'eventForm'])->name('eventForm');
     Route::get('/postList', [AdminPanelController::class, 'postList'])->name('postList');
@@ -61,6 +63,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:api']
     });
     // Route::get('/form', [AdminPanelController::class, 'form'])->name('form');
 });
+
+Route::post('emailSubscription', function () {
+    if (request()->filled('mail')) {
+        $res = MailSubscription::create([
+            'mail' => request()->mail,
+        ]);
+        return ApiResponse::created('', $res);
+    }
+    return ApiResponse::forbidden('queryRequired', ['required' => '\'mail\' param in query']);
+})->middleware('throttle:0.5,1');
 
 Route::get('request-reset-password', function () {
     $email = request()->email ?? null;

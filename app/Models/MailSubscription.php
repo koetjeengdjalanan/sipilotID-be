@@ -38,4 +38,11 @@ class MailSubscription extends Model
     protected $guarded   = [
         'created_at',
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime:Uv',
+        'updated_at' => 'datetime:Uv',
+        'deleted_at' => 'datetime:Uv',
+    ];
+
 }
