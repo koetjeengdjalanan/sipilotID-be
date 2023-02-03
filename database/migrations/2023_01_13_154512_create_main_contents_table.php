@@ -17,7 +17,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->smallInteger('section');
             $table->string('title');
-            $table->text('body')->nullable();
+            $table->jsonb('content')->nullable();
             $table->string('image')->nullable();
             $table->foreignUuid('user_id')->constrained();
             $table->softDeletes();

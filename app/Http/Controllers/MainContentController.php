@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MainContentResource;
 use App\Libraries\ApiResponse;
 use App\Models\MainContent;
+use Arr;
 
 class MainContentController extends Controller
 {
@@ -12,9 +14,9 @@ class MainContentController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        $content = MainContent::all();
+        $content = MainContent::get();
         $content->each(function ($vis) {
             if (env('APP_ENV', 'local') !== 'local') {
                 visits($vis)->increment();
@@ -22,10 +24,10 @@ class MainContentController extends Controller
                 visits($vis)->forceIncrement(rand(3, 20));
             }
         });
-        $res = $content
-            ->makeHidden(['id', 'section', 'deleted_at', 'created_at', 'updated_at', 'user_id'])
-            ->sortBy('section')->groupBy('section')
-            ->map(fn($sec) => $sec->sortBy('updated_at')->first());
-        return ApiResponse::success('', $res->toArray());
+        $res = [];
+        foreach ($content as $key => $value) {
+            $res = Arr::add($res, $value['section'], new MainContentResource($value));
+        }
+        return ApiResponse::success('', $res);
     }
 }

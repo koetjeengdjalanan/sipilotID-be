@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class MainContentResource extends ResourceCollection
+class MainContentResource extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -15,12 +15,14 @@ class MainContentResource extends ResourceCollection
     public function toArray($request)
     {
         $data = parent::toArray($request);
-        return collect([
-            'id'     => $data['id'],
-            'title'  => $data['title'],
-            'body'   => $data['body'],
-            'image'  => $data['image'],
-            'author' => $request->author->pluck('name'),
-        ]);
+        // dd($data[0]['section']);
+        return collect(
+            [
+                'id'      => $data['id'],
+                'title'   => $data['title'],
+                'image'   => $data['image'],
+                'content' => json_decode($data['content']),
+            ]
+        );
     }
 }
