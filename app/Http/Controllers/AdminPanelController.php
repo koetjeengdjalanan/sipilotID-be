@@ -76,18 +76,6 @@ class AdminPanelController extends Controller
         return view('mail.compose', $data);
     }
 
-    public function eventForm()
-    {
-        $perPage              = request()->filled('perPage') ? request()->perPage : null;
-        $query                = Form::with(['author', 'media']);
-        (bool) $publishFilter = request()->published_only;
-        if ($publishFilter === 'true') {
-            $query = $query->whereNotNull('published_date');
-        }
-        $res = $query->orderBy('updated_at')->paginate($perPage);
-        return ApiResponse::success('', new FormPaginateCollection($res));
-    }
-
     // public function postList()
     // {
     //     $perPage              = request()->filled('perPage') ? request()->perPage : null;

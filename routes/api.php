@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FormController;
 use App\Http\Controllers\MainContentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TagController;
@@ -28,6 +29,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
     Route::get('', [MainContentController::class, 'index'])->name('index');
+});
+
+Route::group(['prefix' => 'event', 'as' => 'event.'], function () {
+    Route::get('', [FormController::class, 'index'])->name('index');
+    Route::get('upcoming', [FormController::class, 'upcoming'])->name('upcoming');
+    Route::get('show', [FormController::class, 'show'])->name('show');
 });
 
 Route::group(['prefix' => 'auth', 'as' => 'auth.', 'middleware' => 'api'], function () {
@@ -56,11 +63,15 @@ Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('', [AdminPanelController::class, 'dashboard'])->name('dashboard');
-    Route::get('/formList', [AdminPanelController::class, 'eventForm'])->name('eventForm');
-    Route::get('/postList', [AdminPanelController::class, 'postList'])->name('postList');
+    Route::get('postList', [AdminPanelController::class, 'postList'])->name('postList');
     Route::group(['prefix' => 'form', 'as' => 'form.'], function () {
+        Route::get('', [FormController::class, 'adminIndex'])->name('adminIndex');
         Route::post('/publish', [AdminPanelController::class, 'publish'])->name('publish');
     });
+    Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
+        Route::post('/update', [MainContentController::class, 'update'])->name('update');
+    });
+    // Route::group(['prefix' => '']);
     // Route::get('/form', [AdminPanelController::class, 'form'])->name('form');
 });
 

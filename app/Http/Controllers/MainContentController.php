@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateMainContentRequest;
 use App\Http\Resources\MainContentResource;
 use App\Libraries\ApiResponse;
 use App\Models\MainContent;
@@ -16,7 +17,7 @@ class MainContentController extends Controller
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $content = MainContent::get();
+        $content = MainContent::all()->sortBy('section');
         $content->each(function ($vis) {
             if (env('APP_ENV', 'local') !== 'local') {
                 visits($vis)->increment();
@@ -29,5 +30,12 @@ class MainContentController extends Controller
             $res = Arr::add($res, $value['section'], new MainContentResource($value));
         }
         return ApiResponse::success('', $res);
+    }
+
+    public function update(MainContent $content, UpdateMainContentRequest $request)
+    {
+        $req = $request->validated();
+        $res = $content->whereId(request()->id)->update($req);
+        return ApiResponse::created('Success Update MainContent', $res);
     }
 }

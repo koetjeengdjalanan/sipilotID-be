@@ -42,8 +42,15 @@ class Media extends Model
         'created_at',
     ];
 
+    protected $casts = [
+        'updated_at' => 'datetime:Uv',
+        'deleted_at' => 'datetime:Uv',
+        'created_at' => 'datetime:Uv',
+    ];
+
     public function mediable()
     {
         return $this->morphTo(__FUNCTION__, 'mediable_type', 'mediable_id');
     }
+
 }

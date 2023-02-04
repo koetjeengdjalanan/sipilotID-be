@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('excerpt');
             $table->timestamp('publish_date')->nullable();
-            $table->timestamp('expire');
+            $table->timestamp('expire')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

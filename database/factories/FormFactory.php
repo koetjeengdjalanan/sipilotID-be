@@ -20,10 +20,10 @@ class FormFactory extends Factory
     public function definition()
     {
         $title       = fake()->unique()->words(rand(3, 7), true);
-        $publish     = fake()->dateTime('now');
+        $publish     = fake()->dateTimeInInterval('-1 months', '+3 months');
         $description = fake()->paragraph(rand(3, 5));
         return [
-            'title'        => $title,
+            'title'        => Str::title($title),
             'slug'         => Str::slug($title),
             'user_id'      => User::all()->random()->id,
             'description'  => $description,

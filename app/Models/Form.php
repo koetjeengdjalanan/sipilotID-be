@@ -51,6 +51,12 @@ class Form extends Model
     public $incrementing = false;
     protected $keyType   = 'string';
 
+    protected $casts = [
+        'expire'       => 'datetime:Uv',
+        'publish_date' => 'datetime:Uv',
+        'updated_at'   => 'datetime:Uv',
+        'deleted_at'   => 'datetime:Uv',
+    ];
     protected $guarded = [
         'created_at',
     ];
@@ -61,7 +67,7 @@ class Form extends Model
     }
     public function questions()
     {
-        return $this->hasMany(FormQuestion::class);
+        return $this->hasMany(FormQuestion::class)->orderBy('order');
     }
     public function answer()
     {

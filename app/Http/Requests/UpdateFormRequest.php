@@ -13,7 +13,7 @@ class UpdateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,12 @@ class UpdateFormRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'user_id'      => 'uuid|exists:App\Models\User,id',
+            'title'        => 'required|string',
+            'slug'         => 'required|string|unique:App\Models\Form,slug|alpha_dash',
+            'excerpt'      => 'required|string',
+            'publish_date' => 'numeric|gte:publish_date',
+            'expire'       => 'numeric|gte:publish_date|required_with:publish_date',
         ];
     }
 }

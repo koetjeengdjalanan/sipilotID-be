@@ -13,7 +13,7 @@ class UpdateMainContentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,11 @@ class UpdateMainContentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'user_id' => 'required|exists:App\Models\User,id',
+            'section' => 'required|digits_between:1,6|exists:App\Models\MainContent,section',
+            'title'   => 'required|string',
+            'content' => 'required|json',
+            'image'   => 'required|url',
         ];
     }
 }
