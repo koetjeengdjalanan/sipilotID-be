@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Http;
 use Illuminate\Console\Command;
 
 class TestCommand extends Command
@@ -28,7 +27,8 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        dd(str_replace(array("\t", "\n"), '', Http::get('https://loripsum.net/api/2/short/link/ul/ol/dl/bq/decorate')->body()));
+        $file = asset('storage/example.jpg');
+        dd($file);
         return Command::SUCCESS;
     }
 }

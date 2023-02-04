@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
@@ -99,5 +101,16 @@ class Post extends Model implements Searchable
             $this->title,
             $url
         );
+    }
+    public function scopePublishedBefore(Builder $query, $date): Builder
+    {
+        return $query->where('published_date', '<=', Carbon::parse($date));
+    }
+    public function scopeIsDraft(Builder $query, $value): Builder
+    {
+        $res = ($value == 1)
+        ? $query->whereNull('published_date')
+        : $query;
+        return $res;
     }
 }

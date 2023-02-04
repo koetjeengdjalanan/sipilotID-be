@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\FormPaginateCollection;
 use App\Http\Resources\PostPaginateCollection;
 use App\Http\Resources\PostResource;
 use App\Libraries\ApiResponse;
@@ -10,9 +9,11 @@ use App\Models\Form;
 use App\Models\MailSubscription;
 use App\Models\MainContent;
 use App\Models\Post;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class AdminPanelController extends Controller
@@ -91,9 +92,12 @@ class AdminPanelController extends Controller
     public function postList()
     {
         $perPage = request()->filled('perPage') ? request()->perPage : null;
-        $res     = QueryBuilder::for(Post::class) 
+        $res     = QueryBuilder::for(Post::class)
                 ->with(['tags', 'author', 'category', 'media'])
-                ->allowedFilters(['title', 'body', 'tags.title', 'tags.slug', 'author.name', 'author.slug', 'category.title', 'category.slug'])
+                ->allowedFilters(['title', 'body', 'tags.title', 'tags.slug', 'author.name', 'author.slug', 'category.title', 'category.slug',
+                    AllowedFilter::scope('published_before'),
+                    AllowedFilter::scope('is_draft'),
+                ])
                 ->defaultSorts('-updated_at')
                 ->allowedSorts(['published_date', 'updated_at', 'title', 'author.name', 'author.slug'])
                 ->paginate($perPage)->appends(request()->query());

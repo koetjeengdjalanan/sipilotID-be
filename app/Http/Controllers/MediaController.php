@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMediaRequest;
-use App\Http\Requests\UpdateMediaRequest;
+use App\Http\Resources\MediaResource;
+use App\Libraries\ApiResponse;
 use App\Models\Media;
 
 class MediaController extends Controller
@@ -11,21 +12,12 @@ class MediaController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $res = Media::orderBy('created_at', 'desc')->paginate();
+        return ApiResponse::success('', $res);
     }
 
     /**
@@ -43,44 +35,29 @@ class MediaController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Media  $media
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(Media $media)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Media  $media
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Media $media)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateMediaRequest  $request
-     * @param  \App\Models\Media  $media
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateMediaRequest $request, Media $media)
-    {
-        //
+        if (request()->isNotFilled('id')) {
+            return ApiResponse::unprocessableEntity('Id Params Required', ['tips' => 'check your query and try again']);
+        }
+        $res = $media->whereId(request()->id)->first();
+        return ApiResponse::success('', new MediaResource($res));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Media  $media
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Media $media)
     {
-        //
+        if (request()->isNotFilled('id')) {
+            return ApiResponse::unprocessableEntity('Id Params Required', ['tips' => 'check your query and try again']);
+        }
+        $res = $media->whereId(request()->id)->delete();
+        return ApiResponse::success('', $res);
     }
 }

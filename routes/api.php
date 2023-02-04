@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\MainContentController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TagController;
 use App\Libraries\ApiResponse;
@@ -26,6 +27,24 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::get('', [AdminPanelController::class, 'dashboard'])->name('dashboard');
+    Route::group(['prefix' => 'post', 'as' => 'post.'], function () {
+        Route::get('list', [AdminPanelController::class, 'postList'])->name('list');
+        Route::post('store', [PostController::class, 'store'])->name('store');
+        Route::get('publish', [PostController::class, 'publish'])->name('publish');
+    });
+    Route::group(['prefix' => 'form', 'as' => 'form.'], function () {
+        Route::get('', [FormController::class, 'adminIndex'])->name('adminIndex');
+        Route::post('/publish', [AdminPanelController::class, 'publish'])->name('publish');
+    });
+    Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
+        Route::post('/update', [MainContentController::class, 'update'])->name('update');
+    });
+    // Route::group(['prefix' => '']);
+    // Route::get('/form', [AdminPanelController::class, 'form'])->name('form');
+});
 
 Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
     Route::get('', [MainContentController::class, 'index'])->name('index');
@@ -61,18 +80,9 @@ Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
     Route::get('/{slug}', [CategoryController::class, 'show'])->name('show');
 });
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::get('', [AdminPanelController::class, 'dashboard'])->name('dashboard');
-    Route::get('postList', [AdminPanelController::class, 'postList'])->name('postList');
-    Route::group(['prefix' => 'form', 'as' => 'form.'], function () {
-        Route::get('', [FormController::class, 'adminIndex'])->name('adminIndex');
-        Route::post('/publish', [AdminPanelController::class, 'publish'])->name('publish');
-    });
-    Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
-        Route::post('/update', [MainContentController::class, 'update'])->name('update');
-    });
-    // Route::group(['prefix' => '']);
-    // Route::get('/form', [AdminPanelController::class, 'form'])->name('form');
+Route::group(['prefix' => 'media', 'as' => 'media.'], function () {
+    Route::get('', [MediaController::class, 'index'])->name('index');
+    Route::get('show', [MediaController::class, 'show'])->name('show');
 });
 
 Route::post('emailSubscription', function () {

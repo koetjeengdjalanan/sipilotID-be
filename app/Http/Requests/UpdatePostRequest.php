@@ -13,7 +13,7 @@ class UpdatePostRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,29 @@ class UpdatePostRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "title"          => 'required',
+            "slug"           => 'required|unique:posts,slug|alpha_dash',
+            "user_id"        => 'required|exists:users,id|uuid',
+            "category_id"    => 'required|exists:categories,id|uuid',
+            "excerpt"        => 'required',
+            "body"           => 'required',
+            "published_date" => 'numeric',
         ];
+    }
+
+    /**
+     * @author Martin Sambulare <martin@rakhasa.com>
+     * Get the validated data from the request.
+     *
+     * @param  string|null  $key
+     * @param  mixed  $default
+     * @return mixed
+     */
+    public function validated($key = null, $default = null)
+    {
+        $data = data_get($this->validator->validated(), $key, $default);
+        return array_merge($data, [
+            'published_date' => date('Y-m-d H:i:s', $data['published_date']),
+        ]);
     }
 }

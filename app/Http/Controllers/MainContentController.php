@@ -21,7 +21,7 @@ class MainContentController extends Controller
         $content->each(function ($vis) {
             if (env('APP_ENV', 'local') !== 'local') {
                 visits($vis)->increment();
-            } else {
+            } else if (! env('NUMPANG', true)) {
                 visits($vis)->forceIncrement(rand(3, 20));
             }
         });
