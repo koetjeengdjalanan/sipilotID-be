@@ -61,9 +61,9 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasUuids, HasRoles;
 
-    public $incrementing = false;
-    protected $keyType   = 'string';
-
+    protected $primaryKey = 'id';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
     /**
      * The attributes that are mass assignable.
      *
@@ -71,6 +71,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
     ];
@@ -91,7 +92,10 @@ class User extends Authenticatable implements JWTSubject
      * @var array<string, string>
      */
     protected $casts = [
+        'id'                => 'string',
         'email_verified_at' => 'datetime',
+        'created_at'        => 'datetime:Uv',
+        'updated_at'        => 'datetime:Uv',
     ];
 
     public function mainContent()

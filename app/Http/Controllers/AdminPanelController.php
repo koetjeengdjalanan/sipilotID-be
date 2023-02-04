@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\PostPaginateCollection;
 use App\Http\Resources\PostResource;
 use App\Libraries\ApiResponse;
@@ -9,7 +10,8 @@ use App\Models\Form;
 use App\Models\MailSubscription;
 use App\Models\MainContent;
 use App\Models\Post;
-use Illuminate\Database\Query\Builder;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
@@ -119,6 +121,35 @@ class AdminPanelController extends Controller
     public function form()
     {
         $res = Form::with(['media', 'author'])->paginate();
+        return ApiResponse::success('', $res);
+    }
+
+    public function showUser(User $user)
+    {
+        $res = $user->with(['media', 'roles'])->paginate();
+        return ApiResponse::success('', $res);
+    }
+
+    public function createUser(StoreUserRequest $storeUserRequest)
+    {
+        $res = User::create([
+            'name'     => $storeUserRequest->validated()['name'],
+            'username' => $storeUserRequest->validated()['username'],
+            'email'    => $storeUserRequest->validated()['email'],
+            'password' => bcrypt($storeUserRequest->validated()['password']),
+        ]);
+        return ApiResponse::success('', $res);
+    }
+
+    public function permissionUser(User $user)
+    {
+        $res = $user->whereId(request()->id)->firstOrFail()->assignRole(request()->role);
+        return ApiResponse::created('', $res);
+    }
+
+    public function roles()
+    {
+        $res = Role::all();
         return ApiResponse::success('', $res);
     }
 }

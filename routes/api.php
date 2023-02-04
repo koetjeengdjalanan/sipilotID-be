@@ -31,6 +31,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('', [AdminPanelController::class, 'dashboard'])->name('dashboard');
+    Route::group(['prefix' => 'control', 'as' => 'control.'], function () {
+        Route::get('user', [AdminPanelController::class, 'showUser'])->name('user');
+        Route::Post('user/create', [AdminPanelController::class, 'createUser'])->name('createUser');
+        Route::Post('user/permission', [AdminPanelController::class, 'permissionUser'])->name('permission');
+        Route::get('role', [AdminPanelController::class, 'roles'])->name('roles');
+    });
     Route::group(['prefix' => 'post', 'as' => 'post.'], function () {
         Route::get('list', [AdminPanelController::class, 'postList'])->name('list');
         Route::post('store', [PostController::class, 'store'])->name('store');
