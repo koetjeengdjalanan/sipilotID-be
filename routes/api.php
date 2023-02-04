@@ -7,6 +7,7 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\MainContentController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\TagController;
 use App\Libraries\ApiResponse;
 use App\Models\MailSubscription;
@@ -35,10 +36,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::post('store', [PostController::class, 'store'])->name('store');
         Route::get('publish', [PostController::class, 'publish'])->name('publish');
         Route::post('edit', [PostController::class, 'edit'])->name('edit');
+        Route::group(['prefix' => 'assign', 'as' => 'assign.'], function () {
+            Route::post('tags', [TagController::class, 'store'])->name('store');
+        });
     });
     Route::group(['prefix' => 'form', 'as' => 'form.'], function () {
         Route::get('', [FormController::class, 'adminIndex'])->name('adminIndex');
-        Route::post('/publish', [AdminPanelController::class, 'publish'])->name('publish');
+        Route::post('publish', [AdminPanelController::class, 'publish'])->name('publish');
+        Route::get('submission', [SubmissionController::class, 'index'])->name('index');
+        Route::get('answers', [SubmissionController::class, 'show'])->name('answers');
     });
     Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
         Route::post('/update', [MainContentController::class, 'update'])->name('update');
@@ -53,6 +59,7 @@ Route::group(['prefix' => 'event', 'as' => 'event.'], function () {
     Route::get('', [FormController::class, 'index'])->name('index');
     Route::get('upcoming', [FormController::class, 'upcoming'])->name('upcoming');
     Route::get('show', [FormController::class, 'show'])->name('show');
+    Route::post('submission', [SubmissionController::class, 'store'])->name('submission');
 });
 
 Route::group(['prefix' => 'auth', 'as' => 'auth.', 'middleware' => 'api'], function () {

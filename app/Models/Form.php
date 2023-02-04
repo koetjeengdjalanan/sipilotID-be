@@ -71,7 +71,7 @@ class Form extends Model
     }
     public function answer()
     {
-        return $this->hasManyThrough(FormQuestion::class, Submission::class);
+        return $this->hasMany(Submission::class);
     }
     public function media()
     {

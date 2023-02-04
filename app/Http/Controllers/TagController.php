@@ -7,7 +7,9 @@ use App\Http\Requests\UpdateTagRequest;
 use App\Http\Resources\PostPaginateCollection;
 use App\Http\Resources\TagResource;
 use App\Libraries\ApiResponse;
+use App\Models\Post;
 use App\Models\Tag;
+use Str;
 
 class TagController extends Controller
 {
@@ -37,11 +39,22 @@ class TagController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreTagRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(StoreTagRequest $request)
     {
-        //
+        $tagArray = [];
+        foreach ($request->validated()['tags'] as $key => $value) {
+            $q = Tag::firstOrCreate([
+                'slug' => Str::slug($value),
+            ], [
+                'title'   => $value,
+                'user_id' => $request->validated()['user_id'],
+            ]);
+            array_push($tagArray, $q->id);
+        };
+        $res = Post::findOrFail($request->validated()['post_id'])->tags()->sync($tagArray);
+        return ApiResponse::success('', $res);
     }
 
     /**

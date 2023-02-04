@@ -48,8 +48,4 @@ class FormQuestion extends Model
     {
         return $this->belongsTo(Form::class);
     }
-    public function answers()
-    {
-        return $this->hasMany(Submission::class);
-    }
 }

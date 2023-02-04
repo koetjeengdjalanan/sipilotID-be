@@ -38,8 +38,18 @@ class Submission extends Model
         'created_at',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:Uv',
+        'updated_at' => 'datetime:Uv',
+        'deleted_at' => 'datetime:Uv',
+    ];
+
     public function question()
     {
         return $this->belongsTo(FormQuestion::class);
+    }
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'mediable');
     }
 }

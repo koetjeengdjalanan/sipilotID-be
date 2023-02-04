@@ -13,7 +13,7 @@ class StoreSubmissionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreSubmissionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'form_id' => 'required|exists:\App\Models\Form,id',
+            'answer'  => 'required|json',
         ];
     }
 }

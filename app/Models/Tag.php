@@ -39,6 +39,11 @@ class Tag extends Model
         'created_at',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:Uv',
+        'updated_at' => 'datetime:Uv',
+    ];
+
     public function author()
     {
         return $this->belongsTo(User::class);
