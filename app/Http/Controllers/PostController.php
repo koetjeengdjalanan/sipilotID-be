@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EditPostRequest;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostPaginateCollection;
 use App\Http\Resources\PostResource;
 use App\Libraries\ApiResponse;
 use App\Models\Post;
+use Arr;
 use Carbon\Carbon;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\Searchable\ModelSearchAspect;
@@ -116,12 +118,18 @@ class PostController extends Controller
     {
         // dd(Carbon::createFromTimestamp(request()->published_date)->toW3cString());
         if (empty(request()->id)) {
-            return ApiResponse::unprocessableEntity('Missing Param', ['param' => route('admin.post.publish') . '/{id}']);
+            return ApiResponse::unprocessableEntity('Missing Param', ['param' => 'id as Post ID']);
         }
         if (empty(request()->published_date)) {
             return ApiResponse::unprocessableEntity('Missing Param', ['param' => 'published_date']);
         }
         $res = Post::whereId(request()->id)->update(['published_date' => Carbon::createFromTimestamp(request()->published_date)->toW3cString()]);
         return ApiResponse::success('Post Published', ['id' => request()->id]);
+    }
+
+    public function edit(Post $post, EditPostRequest $editPostRequest)
+    {
+        $res = $post->whereId(request()->id)->update($editPostRequest->validated());
+        return ApiResponse::success('Success Updated Post', $res);
     }
 }

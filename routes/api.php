@@ -34,6 +34,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('list', [AdminPanelController::class, 'postList'])->name('list');
         Route::post('store', [PostController::class, 'store'])->name('store');
         Route::get('publish', [PostController::class, 'publish'])->name('publish');
+        Route::post('edit', [PostController::class, 'edit'])->name('edit');
     });
     Route::group(['prefix' => 'form', 'as' => 'form.'], function () {
         Route::get('', [FormController::class, 'adminIndex'])->name('adminIndex');
@@ -42,8 +43,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
         Route::post('/update', [MainContentController::class, 'update'])->name('update');
     });
-    // Route::group(['prefix' => '']);
-    // Route::get('/form', [AdminPanelController::class, 'form'])->name('form');
 });
 
 Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
