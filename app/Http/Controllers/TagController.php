@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTagRequest;
-use App\Http\Requests\UpdateTagRequest;
 use App\Http\Resources\PostPaginateCollection;
 use App\Http\Resources\TagResource;
 use App\Libraries\ApiResponse;
@@ -26,16 +25,6 @@ class TagController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreTagRequest  $request
@@ -54,7 +43,7 @@ class TagController extends Controller
             array_push($tagArray, $q->id);
         };
         $res = Post::findOrFail($request->validated()['post_id'])->tags()->sync($tagArray);
-        return ApiResponse::success('', $res);
+        return ApiResponse::created('', $res);
     }
 
     /**
@@ -69,39 +58,5 @@ class TagController extends Controller
         $perPage = request()->filled('perPage') ? request()->perPage : null;
         $res     = Tag::where('slug', $slug)->first()->posts()->with(['author', 'category', 'tags', 'media'])->paginate($perPage);
         return ApiResponse::success('', new PostPaginateCollection($res));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tag $tag)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateTagRequest  $request
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateTagRequest $request, Tag $tag)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Tag $tag)
-    {
-        //
     }
 }

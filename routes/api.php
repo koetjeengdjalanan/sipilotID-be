@@ -38,6 +38,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::post('edit', [PostController::class, 'edit'])->name('edit');
         Route::group(['prefix' => 'assign', 'as' => 'assign.'], function () {
             Route::post('tags', [TagController::class, 'store'])->name('store');
+            Route::Post('media', [MediaController::class, 'storePost'])->name('media');
         });
     });
     Route::group(['prefix' => 'form', 'as' => 'form.'], function () {
@@ -45,10 +46,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::post('publish', [AdminPanelController::class, 'publish'])->name('publish');
         Route::get('submission', [SubmissionController::class, 'index'])->name('index');
         Route::get('answers', [SubmissionController::class, 'show'])->name('answers');
+        Route::group(['prefix' => 'assign', 'as' => 'assign.'], function () {
+            Route::Post('media', [MediaController::class, 'storeForm'])->name('media');
+        });
     });
     Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
         Route::post('/update', [MainContentController::class, 'update'])->name('update');
     });
+    Route::post('upload', [MediaController::class, 'upload'])->name('upload');
 });
 
 Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
