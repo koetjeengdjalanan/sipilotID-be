@@ -36,6 +36,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::Post('user/create', [AdminPanelController::class, 'createUser'])->name('createUser');
         Route::Post('user/permission', [AdminPanelController::class, 'permissionUser'])->name('permission');
         Route::get('role', [AdminPanelController::class, 'roles'])->name('roles');
+        Route::get('reset-request', [AuthController::class, 'resetRequest'])->name('reset-request');
     });
     Route::group(['prefix' => 'post', 'as' => 'post.'], function () {
         Route::get('list', [AdminPanelController::class, 'postList'])->name('list');
@@ -114,7 +115,11 @@ Route::post('emailSubscription', function () {
 
 Route::get('request-reset-password', function () {
     $email = request()->email ?? null;
-    if ($email !== null) {
-        User::where('email', $email)->firstOrFail();
+    if (!empty($email)) {
+        $user = User::where('email', $email)->firstOrFail();
+        $res  = $user->update(['request_password_reset' => true]);
+        return ApiResponse::success('', ['message' => 'ask your admin nicely to reopen your account', 'data' => $res]);
+    } else {
+        return ApiResponse::unprocessableEntity('missing params', ['param' => 'email']);
     }
 });

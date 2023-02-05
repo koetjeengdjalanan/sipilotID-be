@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Arr;
 
 class UserProfileResource extends JsonResource
 {
@@ -16,9 +17,11 @@ class UserProfileResource extends JsonResource
     {
         $data = parent::toArray($request);
         return [
+            'id'       => $data['id'],
             'name'     => $data['name'],
             'email'    => $data['email'],
             'imageUrl' => $data['media']['path'],
+            'role'     => Arr::pluck($data['roles'], 'name'),
         ];
     }
 }

@@ -14,7 +14,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'resetRequest']]);
     }
 
     public function login(AuthLoginRequest $request)
@@ -49,7 +49,13 @@ class AuthController extends Controller
     public function user()
     {
         $userId = auth()->user()->id;
-        $res    = User::with('media')->firstWhere('id', $userId);
+        $res    = User::with('media', 'roles')->firstWhere('id', $userId);
         return ApiResponse::success('', new UserProfileResource($res));
+    }
+
+    public function resetRequest(User $user)
+    {
+        $res = $user->whereRequestPasswordReset(true)->get();
+        return ApiResponse::success('', $res);
     }
 }
