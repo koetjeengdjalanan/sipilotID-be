@@ -29,14 +29,22 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['api', 'auth:api']], function () {
     Route::get('', [AdminPanelController::class, 'dashboard'])->name('dashboard');
-    Route::group(['prefix' => 'control', 'as' => 'control.'], function () {
-        Route::get('user', [AdminPanelController::class, 'showUser'])->name('user');
-        Route::Post('user/create', [AdminPanelController::class, 'createUser'])->name('createUser');
-        Route::Post('user/permission', [AdminPanelController::class, 'permissionUser'])->name('permission');
-        Route::get('role', [AdminPanelController::class, 'roles'])->name('roles');
-        Route::get('reset-request', [AuthController::class, 'resetRequest'])->name('reset-request');
+    Route::group(['prefix' => 'control', 'as' => 'control.', 'middleware' => ['role:Super Admin']], function () {
+        Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+            Route::get('', [AdminPanelController::class, 'showUser'])->name('index');
+            Route::Post('create', [AdminPanelController::class, 'createUser'])->name('create');
+            Route::delete('delete', [AdminPanelController::class, 'deleteUser'])->name('delete');
+            Route::get('reset-request', [AuthController::class, 'resetRequest'])->name('reset-request');
+            Route::post('grant-password-reset', [AuthController::class, 'grantPasswordReset'])->name('grant-password-reset');
+            Route::get('deleted', [AdminPanelController::class, 'deletedOnly'])->name('deleted');
+            Route::get('restore', [AdminPanelController::class, 'restore'])->name('restore');
+        });
+        Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
+            Route::get('', [AdminPanelController::class, 'roles'])->name('index');
+            Route::post('assign', [AdminPanelController::class, 'assignRole'])->name('assign');
+        });
     });
     Route::group(['prefix' => 'post', 'as' => 'post.'], function () {
         Route::get('list', [AdminPanelController::class, 'postList'])->name('list');
@@ -45,10 +53,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::post('edit', [PostController::class, 'edit'])->name('edit');
         Route::group(['prefix' => 'assign', 'as' => 'assign.'], function () {
             Route::post('tags', [TagController::class, 'store'])->name('store');
-            Route::Post('media', [MediaController::class, 'storePost'])->name('media');
+            Route::post('media', [MediaController::class, 'storePost'])->name('media');
+        });
+        Route::group(['prefix' => 'delete', 'as' => 'delete.'], function () {
+            Route::get('', [PostController::class, 'trashed'])->middleware('role:Super Admin|Admin')->name('index');
+            Route::delete('soft', [PostController::class, 'destroy'])->middleware('role:Super Admin|Admin')->name('soft');
+            Route::delete('permanent', [PostController::class, 'annihilate'])->middleware('role:Super Admin')->name('annihilate');
+            Route::post('restore', [PostController::class, 'restore'])->middleware('role:Super Admin')->name('restore');
         });
     });
-    Route::group(['prefix' => 'form', 'as' => 'form.'], function () {
+    Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['role:Super Admin|Admin']], function () {
         Route::get('', [FormController::class, 'adminIndex'])->name('adminIndex');
         Route::post('publish', [AdminPanelController::class, 'publish'])->name('publish');
         Route::get('submission', [SubmissionController::class, 'index'])->name('index');
@@ -57,8 +71,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             Route::Post('media', [MediaController::class, 'storeForm'])->name('media');
         });
     });
-    Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
-        Route::post('/update', [MainContentController::class, 'update'])->name('update');
+    Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.', 'middleware' => ['role:Super Admin|Admin']], function () {
+        Route::post('update', [MainContentController::class, 'update'])->name('update');
     });
     Route::post('upload', [MediaController::class, 'upload'])->name('upload');
 });
@@ -75,10 +89,11 @@ Route::group(['prefix' => 'event', 'as' => 'event.'], function () {
 });
 
 Route::group(['prefix' => 'auth', 'as' => 'auth.', 'middleware' => 'api'], function () {
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/refresh_token', [AuthController::class, 'refreshToken'])->name('refresh_token');
-    Route::get('/profile', [AuthController::class, 'user'])->name('profile');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('refresh_token', [AuthController::class, 'refreshToken'])->name('refresh_token');
+    Route::get('profile', [AuthController::class, 'user'])->name('profile');
+    Route::post('change-password', [AuthController::class, 'changePassword'])->name('change-password');
 });
 
 Route::group(['prefix' => 'post', 'as' => 'post.'], function () {

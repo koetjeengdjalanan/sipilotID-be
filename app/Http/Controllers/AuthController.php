@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthLoginRequest;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Resources\LoginResource;
 use App\Http\Resources\UserProfileResource;
 use App\Libraries\ApiResponse;
 use App\Models\User;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Auth;
+use Str;
 
 class AuthController extends Controller
 {
@@ -57,5 +59,29 @@ class AuthController extends Controller
     {
         $res = $user->whereRequestPasswordReset(true)->get();
         return ApiResponse::success('', $res);
+    }
+
+    public function changePassword(ChangePasswordRequest $changePasswordRequest)
+    {
+        if ($changePasswordRequest->validated()['new_password'] != $changePasswordRequest->validated()['repeat_new_password']) {
+            return ApiResponse::unprocessableEntity('', ['error' => 'new password not match']);
+        }
+        $user           = User::whereUsername(auth()->user()->username)->first();
+        $user->password = bcrypt($changePasswordRequest->validated()['new_password']);
+        $res            = $user->save();
+        return ApiResponse::success('', $res);
+    }
+
+    public function grantPasswordReset(User $user)
+    {
+        $validated = request()->validate([
+            'user_id' => 'required|uuid|exists:\App\Models\User,id',
+        ]);
+        $res                                 = Str::random(8);
+        $currentUser                         = $user->whereId($validated['user_id'])->first();
+        $currentUser->password               = bcrypt($res);
+        $currentUser->request_password_reset = false;
+        $currentUser->save();
+        return ApiResponse::success('', ['new Password' => $res]);
     }
 }

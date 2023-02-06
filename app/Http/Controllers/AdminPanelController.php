@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AssignRoleRequest;
+use App\Http\Requests\DeleteUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\PostPaginateCollection;
 use App\Http\Resources\PostResource;
@@ -141,15 +143,36 @@ class AdminPanelController extends Controller
         return ApiResponse::success('', $res);
     }
 
-    public function permissionUser(User $user)
+    public function assignRole(User $user, AssignRoleRequest $assignRoleRequest)
     {
-        $res = $user->whereId(request()->id)->firstOrFail()->assignRole(request()->role);
+        $res = $user->whereId($assignRoleRequest->validated()['user_id'])->firstOrFail()->syncRoles($assignRoleRequest->validated()['role']);
         return ApiResponse::created('', $res);
     }
 
     public function roles()
     {
         $res = Role::all();
+        return ApiResponse::success('', $res);
+    }
+
+    public function deleteUser(User $user, DeleteUserRequest $deleteUserRequest)
+    {
+        $user->whereId($deleteUserRequest->validated()['user_id'])->first()->deleteOrFail();
+        return ApiResponse::success('deleted', ['deleted' => $deleteUserRequest->validated()['user_id']]);
+    }
+
+    public function deletedOnly(User $user)
+    {
+        $res = $user->onlyTrashed()->get();
+        return ApiResponse::success('', $res);
+    }
+
+    public function restore(User $user)
+    {
+        $data = request()->validate([
+            'user_id' => 'required|uuid|exists:\App\Models\User,id'
+        ]);
+        $res = $user->whereId($data['user_id'])->withTrashed()->first()->restore();
         return ApiResponse::success('', $res);
     }
 }
