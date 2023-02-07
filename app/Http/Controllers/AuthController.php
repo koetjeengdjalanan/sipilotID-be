@@ -46,7 +46,13 @@ class AuthController extends Controller
         if (!$refreshedToken = auth()->refresh()) {
             ApiResponse::forbidden('', ['tips' => 'Try Re Login']);
         }
-        return ApiResponse::success('Login Success', new LoginResource(['access_token' => $refreshedToken]));
+        $payload = auth()->payload();
+        $res     = [
+            'access_token' => $refreshedToken,
+            'expire_after' => $payload['exp'],
+            'issued_at'    => $payload['iat'],
+        ];
+        return ApiResponse::success('Login Success', new LoginResource($res));
     }
 
     public function user()
