@@ -26,10 +26,11 @@ class AuthController extends Controller
         if (!$token = auth('api')->attempt($request->toArray())) {
             return ApiResponse::unauthorized('Failed Login', ['tips' => 'Please Check your email and password, else ask your administrator for password reset']);
         }
-        // dd(auth()->ttl);
-        $res = [
+        $payload = auth()->payload();
+        $res     = [
             'access_token' => $token,
-            // 'ttl' => auth()->w
+            'expire_after' => $payload['exp'],
+            'issued_at'    => $payload['iat'],
         ];
         return ApiResponse::success('Login Success', new LoginResource(collect($res)));
     }

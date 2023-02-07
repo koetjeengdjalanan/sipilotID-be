@@ -14,12 +14,12 @@ class LoginResource extends JsonResource
      */
     public function toArray($request)
     {
-        $data          = parent::toArray($request);
-        $unixTimestamp = now()->timestamp;
+        $data = parent::toArray($request);
         return [
             'token_type'   => 'bearer',
             'access_token' => $data['access_token'],
-            'timeStamp'    => $unixTimestamp,
+            'expire_after' => $data['expire_after'],
+            'issued_at'    => $data['issued_at'],
         ];
     }
 
