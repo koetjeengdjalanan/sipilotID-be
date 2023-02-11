@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('order');
             $table->string('question');
             $table->string('type');
-            $table->jsonb('label')->nullable();
+            $table->json('label')->nullable();
             $table->timestamps();
         });
     }

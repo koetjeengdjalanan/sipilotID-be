@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('submissions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('form_id');
-            $table->jsonb('answer');
+            $table->json('answer');
             $table->timestamps();
         });
     }
