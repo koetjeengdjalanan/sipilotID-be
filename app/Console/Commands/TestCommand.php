@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Category;
 use Illuminate\Console\Command;
 
 class TestCommand extends Command
@@ -27,8 +28,8 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        $file = asset('storage/example.jpg');
-        dd($file);
+        $delete = Category::find('9872c3a5-c758-4adf-8249-04e00bd2eae4')->delete();
+        dd($delete);
         return Command::SUCCESS;
     }
 }

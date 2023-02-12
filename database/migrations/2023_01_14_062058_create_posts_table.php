@@ -17,8 +17,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->foreignUuid('user_id')->constrained();
-            $table->foreignUuid('category_id')->nullable()->constrained();
+            $table->foreignUuid('user_id')->constrained()->nullOnDelete();
+            $table->foreignUuid('category_id')->nullable()->constrained()->nullOnDelete();
             $table->text('excerpt');
             $table->mediumText('body')->nullable();
             $table->timestamp('published_date')->nullable();

@@ -62,6 +62,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['api', 'au
             Route::post('restore', [PostController::class, 'restore'])->middleware('role:Super Admin')->name('restore');
         });
     });
+    Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
+        Route::get('', [CategoryController::class, 'list'])->name('index');
+        Route::post('store', [CategoryController::class, 'store'])->name('store');
+        Route::delete('delete', [CategoryController::class, 'destroy'])->name('delete');
+    });
     Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['role:Super Admin|Admin']], function () {
         Route::get('', [FormController::class, 'adminIndex'])->name('adminIndex');
         Route::post('publish', [AdminPanelController::class, 'publish'])->name('publish');

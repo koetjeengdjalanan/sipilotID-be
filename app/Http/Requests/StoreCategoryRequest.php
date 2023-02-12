@@ -13,7 +13,7 @@ class StoreCategoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class StoreCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title'   => 'required|string|unique:\App\Models\Category,title',
+            'slug'    => 'required|string|unique:\App\Models\Category,slug',
+            'user_id' => 'required|uuid|exists:\App\Models\User,id',
         ];
     }
 }

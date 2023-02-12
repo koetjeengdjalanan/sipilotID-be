@@ -43,9 +43,15 @@ class Category extends Model
         'created_at',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:Uv',
+        'updated_at' => 'datetime:Uv',
+        'deleted_at' => 'datetime:Uv',
+    ];
+
     public function author()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
     public function posts()
     {
