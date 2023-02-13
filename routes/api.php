@@ -36,6 +36,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['api', 'au
             Route::get('', [AdminPanelController::class, 'showUser'])->name('index');
             Route::Post('create', [AdminPanelController::class, 'createUser'])->name('create');
             Route::delete('delete', [AdminPanelController::class, 'deleteUser'])->name('delete');
+            Route::post('update', [AdminPanelController::class, 'updateUser'])->name('update');
             Route::get('reset-request', [AuthController::class, 'resetRequest'])->name('reset-request');
             Route::post('grant-password-reset', [AuthController::class, 'grantPasswordReset'])->name('grant-password-reset');
             Route::get('deleted', [AdminPanelController::class, 'deletedOnly'])->name('deleted');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AssignRoleRequest;
 use App\Http\Requests\DeleteUserRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\PostPaginateCollection;
 use App\Http\Resources\PostResource;
 use App\Libraries\ApiResponse;
@@ -170,9 +171,19 @@ class AdminPanelController extends Controller
     public function restore(User $user)
     {
         $data = request()->validate([
-            'user_id' => 'required|uuid|exists:\App\Models\User,id'
+            'user_id' => 'required|uuid|exists:\App\Models\User,id',
         ]);
         $res = $user->whereId($data['user_id'])->withTrashed()->first()->restore();
+        return ApiResponse::success('', $res);
+    }
+
+    public function updateUser(UpdateUserRequest $updateUserRequest, User $user)
+    {
+        $res = $user->whereId($updateUserRequest->validated()['id'])->update([
+            'name'     => $updateUserRequest->validated()['name'],
+            'username' => $updateUserRequest->validated()['username'],
+            'email'    => $updateUserRequest->validated()['email'],
+        ]);
         return ApiResponse::success('', $res);
     }
 }
