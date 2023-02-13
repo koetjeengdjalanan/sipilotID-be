@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteAssetRequest;
 use App\Http\Requests\MediaUploadRequest;
 use App\Http\Requests\StorePostMediaRequest;
 use App\Http\Resources\MediaResource;
 use App\Libraries\ApiResponse;
+use App\Models\Asset;
 use App\Models\Form;
 use App\Models\Media;
 use App\Models\Post;
+use File;
 use Str;
 
 class MediaController extends Controller
@@ -20,7 +23,7 @@ class MediaController extends Controller
      */
     public function index()
     {
-        $res = Media::orderByDesc('created_at')->paginate();
+        $res = Asset::orderByDesc('created_at')->paginate();
         return ApiResponse::success('', $res);
     }
 
@@ -71,18 +74,23 @@ class MediaController extends Controller
      * @param  \App\Models\Media  $media
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Media $media)
+    public function destroy(DeleteAssetRequest $deleteAssetRequest, Media $media)
     {
-        if (request()->isNotFilled('id')) {
-            return ApiResponse::unprocessableEntity('Id Params Required', ['tips' => 'check your query and try again']);
+        $assetPath = Asset::find($deleteAssetRequest->validated()['id']);
+        $fileName  = Str::after($assetPath->toArray()['url'], env('APP_URL', 'https://localhost') . '/media/');
+        if (File::exists(public_path('media/' . $fileName))) {
+            File::delete(public_path('media/' . $fileName));
+            $res = $assetPath->delete();
         }
-        $res = $media->whereId(request()->id)->delete();
         return ApiResponse::success('', $res);
     }
 
     public function upload(MediaUploadRequest $mediaUploadRequest)
     {
-        $fileName = Str::ulid() . "." . $mediaUploadRequest->file->extension();
+        $fileName = Str::lower(Str::ulid()) . "." . $mediaUploadRequest->file->extension();
+        Asset::create([
+            'url' => env('APP_URL', 'https://localhost') . '/media/' . $fileName,
+        ]);
         $mediaUploadRequest->file->move(public_path('media'), $fileName);
         return ApiResponse::created('File Uploaded', env('APP_URL', 'http://localhost') . "/media/" . $fileName);
     }

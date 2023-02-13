@@ -81,6 +81,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['api', 'au
         Route::post('update', [MainContentController::class, 'update'])->name('update');
     });
     Route::post('upload', [MediaController::class, 'upload'])->name('upload');
+    Route::group(['prefix' => 'media', 'as' => 'media.'], function () {
+        Route::get('', [MediaController::class, 'index'])->name('index');
+        Route::delete('delete', [MediaController::class, 'destroy'])->middleware(['role:Super Admin|Admin'])->name('delete');
+    });
 });
 
 Route::group(['prefix' => 'maincontent', 'as' => 'maincontent.'], function () {
@@ -120,7 +124,7 @@ Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
 });
 
 Route::group(['prefix' => 'media', 'as' => 'media.'], function () {
-    Route::get('', [MediaController::class, 'index'])->name('index');
+    // Route::get('', [MediaController::class, 'index'])->name('index');
     Route::get('show', [MediaController::class, 'show'])->name('show');
 });
 
