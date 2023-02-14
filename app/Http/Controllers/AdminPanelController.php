@@ -146,7 +146,8 @@ class AdminPanelController extends Controller
 
     public function assignRole(User $user, AssignRoleRequest $assignRoleRequest)
     {
-        $res = $user->whereId($assignRoleRequest->validated()['user_id'])->firstOrFail()->syncRoles($assignRoleRequest->validated()['role']);
+        $res = $user->whereId($assignRoleRequest->validated()['user_id'])->firstOrFail()
+        ->syncRoles(Role::find($assignRoleRequest->validated()['role'])->name);
         return ApiResponse::created('', $res);
     }
 
