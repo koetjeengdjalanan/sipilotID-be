@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminPanelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,11 +18,7 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::get('', [AdminPanelController::class, 'dashboard'])->name('dashboard');
-    Route::group(['prefix' => 'mail', 'as' => 'mail.'], function () {
-        Route::get('subscriber', [AdminPanelController::class, 'subscriber'])->name('subscriber');
-        Route::get('compose', [AdminPanelController::class, 'compose'])->name('compose');
-        Route::get('unSub', [AdminPanelController::class, 'subscriber'])->name('unSub');
-    });
-    Route::get('destroy', [AdminPanelController::class, 'destroy'])->name('deletePost');
+    // Route::get('/mail', function () {
+    //     return view('mail');
+    // });
 });

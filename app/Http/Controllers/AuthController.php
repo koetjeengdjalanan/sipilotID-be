@@ -10,6 +10,7 @@ use App\Libraries\ApiResponse;
 use App\Models\User;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Auth;
+use Mail;
 use Str;
 
 class AuthController extends Controller
@@ -89,6 +90,9 @@ class AuthController extends Controller
         $currentUser->password               = bcrypt($res);
         $currentUser->request_password_reset = false;
         $currentUser->save();
-        return ApiResponse::success('', ['new Password' => $res]);
+        Mail::html('<h1 id="maestro-supreme-cms">Maestro Supreme CMS</h1><h3 id="your-password-reset-request-has-been-granted">Your Password Reset Request Has Been Granted</h3><p>This is your new credential:</p><ul><li>Email: ' . $currentUser->email . '</li><li>Password: ' . $res . '</li></ul><hr><blockquote><p>Maestro Supreme Content Management System</p></blockquote>', fn($mail) =>
+            $mail->to($currentUser->email)->subject('New Password')
+        );
+        return ApiResponse::success('', 'Check User Email for Future Instruction');
     }
 }

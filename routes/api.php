@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\MailingController;
 use App\Http\Controllers\MainContentController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
@@ -84,6 +85,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['api', 'au
     Route::group(['prefix' => 'media', 'as' => 'media.'], function () {
         Route::get('', [MediaController::class, 'index'])->name('index');
         Route::delete('delete', [MediaController::class, 'destroy'])->middleware(['role:Super Admin|Admin'])->name('delete');
+    });
+    Route::group(['prefix' => 'mail', 'as' => 'mail.', 'middleware' => ['role:Super Admin|Admin']], function () {
+        Route::post('send', [MailingController::class, 'sendMail'])->name('send');
     });
 });
 
