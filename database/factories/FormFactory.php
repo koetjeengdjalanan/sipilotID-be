@@ -24,7 +24,7 @@ class FormFactory extends Factory
         $description = fake()->paragraph(rand(3, 5));
         return [
             'title'        => Str::title($title),
-            'slug'         => Str::slug($title),
+            'slug'         => 'https://form.sipilot.id/index.php/' . fake()->numberBetween(10000, 99999) . '?lang=id',
             'user_id'      => User::all()->random()->id,
             'description'  => $description,
             'excerpt'      => Str::excerpt($description),

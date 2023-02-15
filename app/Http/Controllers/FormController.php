@@ -9,6 +9,8 @@ use App\Http\Resources\FormPaginateCollection;
 use App\Http\Resources\FormWithQuestionsResource;
 use App\Libraries\ApiResponse;
 use App\Models\Form;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use PHPOpenSourceSaver\JWTAuth\Providers\Auth\Illuminate;
 
 class FormController extends Controller
@@ -36,7 +38,7 @@ class FormController extends Controller
         if ($publishFilter === 'true') {
             $query = $query->whereNotNull('published_date');
         }
-        $res = $query->orderBy('updated_at')->paginate($perPage);
+        $res = $query->orderByDesc('updated_at')->paginate($perPage);
         return ApiResponse::success('', new FormPaginateCollection($res));
     }
 
@@ -48,9 +50,8 @@ class FormController extends Controller
     public function upcoming()
     {
         $res     = Form::where('publish_date', '>=', now())->with('media')->get()->sortBy('publish_date')->first();
-        $nearest = new EventListResource($res);
-        // dd($nearest);
-        return ApiResponse::success('', $nearest ?? []);
+        $nearest = isset($res) ? new EventListResource($res) : null;
+        return isset($nearest) ? ApiResponse::success('', $nearest ?? []) : ApiResponse::notFound('No Upcoming Event', []);
     }
 
     /**
@@ -62,7 +63,15 @@ class FormController extends Controller
     public function store(StoreFormRequest $request)
     {
         $req = $request->validated();
-        $res = Form::create($req)->saveOrFail();
+        $res = Form::create([
+            'user_id'      => $req['user_id'],
+            'title'        => $req['title'],
+            'slug'         => $req['slug'],
+            'excerpt'      => $req['excerpt'],
+            'description'  => $req['description'],
+            'publish_date' => Carbon::createFromTimestamp($req['publish_date'])->toW3cString(),
+            'expire'       => Carbon::createFromTimestamp($req['expire'])->toW3cString(),
+        ])->saveOrFail();
         if (!$res) {
             return ApiResponse::error('Something Went Wrong', ['tips' => 'Check your input and/or validation']);
         }
@@ -94,10 +103,18 @@ class FormController extends Controller
      * @param  \App\Models\Form  $form
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateFormRequest $request, Form $form, string $slug)
+    public function update(UpdateFormRequest $request, Form $form)
     {
         $req = $request->validated();
-        $res = $form->whereSlug($slug)->update($req);
+        $res = $form->whereId($req['id'])->first()->updateOrFail([
+            'user_id'      => $req['user_id'],
+            'title'        => $req['title'],
+            'slug'         => $req['slug'],
+            'excerpt'      => $req['excerpt'],
+            'description'  => $req['description'],
+            'publish_date' => Carbon::createFromTimestamp($req['publish_date'])->toW3cString(),
+            'expire'       => Carbon::createFromTimestamp($req['expire'])->toW3cString(),
+        ]);
         if (!$res) {
             return ApiResponse::error('Something Went Wrong', ['tips' => 'Check your input and/or validation']);
         }
@@ -110,13 +127,13 @@ class FormController extends Controller
      * @param  \App\Models\Form  $form
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Form $form)
+    public function destroy(Request $request)
     {
-        $res = $form->whereSlug(request()->slug);
+        $res = Form::find($request->id);
         if (empty($res)) {
-            return ApiResponse::unprocessableEntity('Param Required SLUG', ['tips' => 'perhaps your input is mistyped']);
+            return ApiResponse::unprocessableEntity('Param Required ID', ['tips' => 'perhaps your input is missed type']);
         }
         $res->deleteOrFail();
-        return ApiResponse::success('Delete success', []);
+        return ApiResponse::success('Delete success', $res);
     }
 }

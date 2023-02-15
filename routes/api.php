@@ -71,7 +71,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['api', 'au
     });
     Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['role:Super Admin|Admin']], function () {
         Route::get('', [FormController::class, 'adminIndex'])->name('adminIndex');
-        Route::post('publish', [AdminPanelController::class, 'publish'])->name('publish');
+        Route::post('store', [FormController::class, 'store'])->name('store');
+        Route::put('update', [FormController::class, 'update'])->name('update');
+        Route::delete('delete', [FormController::class, 'destroy'])->name('delete');
         Route::get('submission', [SubmissionController::class, 'index'])->name('index');
         Route::get('answers', [SubmissionController::class, 'show'])->name('answers');
         Route::group(['prefix' => 'assign', 'as' => 'assign.'], function () {

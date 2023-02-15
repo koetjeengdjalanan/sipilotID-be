@@ -17,13 +17,13 @@ class EventListResource extends JsonResource
         $data = parent::toArray($request);
         // dd($data['id']);
         return [
-            'id'           => $data['id'],
-            'title'        => $data['title'],
-            'slug'         => $data['slug'],
-            'excerpt'      => $data['excerpt'],
-            'publish_date' => $data['publish_date'],
-            'expire'       => $data['expire'],
-            'imageUrl'     => $data['media'][0]['path'],
+            'id'           => $data['id'] ?? null,
+            'title'        => $data['title'] ?? null,
+            'slug'         => $data['slug'] ?? null,
+            'excerpt'      => $data['excerpt'] ?? null,
+            'publish_date' => (int) $data['publish_date'] ?? null,
+            'expire'       => (int) $data['expire'] ?? null,
+            'imageUrl'     => $data['media'][0]['path'] ?? 'https://source.unsplash.com/random/640%C3%97480?party',
         ];
     }
 }

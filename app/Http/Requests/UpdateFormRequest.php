@@ -24,11 +24,13 @@ class UpdateFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'      => 'uuid|exists:App\Models\User,id',
+            'id'           => 'required|uuid|exists:App\Models\Form,id',
+            'user_id'      => 'required|uuid|exists:App\Models\User,id',
             'title'        => 'required|string',
-            'slug'         => 'required|string|unique:App\Models\Form,slug|alpha_dash',
+            'slug'         => 'required|url',
             'excerpt'      => 'required|string',
-            'publish_date' => 'numeric|gte:publish_date',
+            'description'  => 'required|string',
+            'publish_date' => 'numeric',
             'expire'       => 'numeric|gte:publish_date|required_with:publish_date',
         ];
     }
