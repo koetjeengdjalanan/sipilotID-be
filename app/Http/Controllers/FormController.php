@@ -69,8 +69,8 @@ class FormController extends Controller
             'slug'         => $req['slug'],
             'excerpt'      => $req['excerpt'],
             'description'  => $req['description'],
-            'publish_date' => Carbon::createFromTimestamp($req['publish_date'])->toW3cString(),
-            'expire'       => Carbon::createFromTimestamp($req['expire'])->toW3cString(),
+            'publish_date' => Carbon::createFromTimestamp($req['publish_date'])->format("Y-m-d H:i:s"),
+            'expire'       => Carbon::createFromTimestamp($req['expire'])->format("Y-m-d H:i:s"),
         ])->saveOrFail();
         if (!$res) {
             return ApiResponse::error('Something Went Wrong', ['tips' => 'Check your input and/or validation']);
@@ -112,8 +112,8 @@ class FormController extends Controller
             'slug'         => $req['slug'],
             'excerpt'      => $req['excerpt'],
             'description'  => $req['description'],
-            'publish_date' => Carbon::createFromTimestamp($req['publish_date'])->toW3cString(),
-            'expire'       => Carbon::createFromTimestamp($req['expire'])->toW3cString(),
+            'publish_date' => Carbon::createFromTimestamp($req['publish_date'])->format("Y-m-d H:i:s"),
+            'expire'       => Carbon::createFromTimestamp($req['expire'])->format("Y-m-d H:i:s"),
         ]);
         if (!$res) {
             return ApiResponse::error('Something Went Wrong', ['tips' => 'Check your input and/or validation']);
