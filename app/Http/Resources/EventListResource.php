@@ -23,6 +23,7 @@ class EventListResource extends JsonResource
             'excerpt'      => $data['excerpt'],
             'publish_date' => $data['publish_date'],
             'expire'       => $data['expire'],
+            'imageUrl'     => $data['media'][0]['path'],
         ];
     }
 }
