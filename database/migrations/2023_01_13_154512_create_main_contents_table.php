@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->json('content')->nullable();
             $table->string('image')->nullable();
-            $table->foreignUuid('user_id')->constrained()->nullOnDelete();
+            $table->foreignUuid('user_id')->nullable()->constrained()->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
