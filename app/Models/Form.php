@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\Form
@@ -46,7 +47,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Form extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, SoftDeletes;
 
     public $incrementing = false;
     protected $keyType   = 'string';
@@ -54,6 +55,7 @@ class Form extends Model
     protected $casts = [
         'expire'       => 'datetime:Uv',
         'publish_date' => 'datetime:Uv',
+        'created_at'   => 'datetime:Uv',
         'updated_at'   => 'datetime:Uv',
         'deleted_at'   => 'datetime:Uv',
     ];

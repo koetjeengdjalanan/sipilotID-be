@@ -27,7 +27,8 @@ class StoreFormRequest extends FormRequest
         return [
             'user_id'      => 'required|uuid|exists:App\Models\User,id',
             'title'        => 'required|string',
-            'slug'         => 'required|url|unique:App\Models\Form,slug',
+            'slug'         => 'sometimes|url',
+            'blog_url'     => 'sometimes|url',
             'excerpt'      => 'required|string',
             'description'  => 'required|string',
             'publish_date' => 'numeric|after_or_equal:' . Carbon::now()->timestamp,

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Post;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -26,6 +27,7 @@ class FormFactory extends Factory
             'title'        => Str::title($title),
             'slug'         => 'https://form.sipilot.id/index.php/' . fake()->numberBetween(10000, 99999) . '?lang=id',
             'user_id'      => User::all()->random()->id,
+            'blog_url'     => env('APP_URL', 'http://localhost:8000') . '/api/post/' . Post::all()->random()->slug,
             'description'  => $description,
             'excerpt'      => Str::excerpt($description),
             'publish_date' => $publish,

@@ -11,6 +11,7 @@ use App\Http\Resources\PostResource;
 use App\Libraries\ApiResponse;
 use App\Models\Post;
 use Carbon\Carbon;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
@@ -21,9 +22,17 @@ class PostController extends Controller
     public function __construct()
     {
         $this->post = QueryBuilder::for(Post::class)
+                ->whereNotNull('published_date')
                 ->with(['tags', 'author', 'category', 'media'])
                 ->allowedFilters([
-                    'title', 'body', 'tags.title', 'tags.slug', 'author.name', 'author.slug', 'category.title', 'category.slug',
+                    AllowedFilter::partial('title'), 
+                    AllowedFilter::partial('body'), 
+                    AllowedFilter::exact('tags.title'), 
+                    AllowedFilter::exact('tags.slug'), 
+                    AllowedFilter::exact('author.name'), 
+                    AllowedFilter::exact('author.slug'), 
+                    AllowedFilter::exact('category.title'), 
+                    AllowedFilter::exact('category.slug'),
                 ])
                 ->defaultSorts('-updated_at')
                 ->allowedSorts(['published_date', 'updated_at', 'title', 'author.name', 'author.slug']);

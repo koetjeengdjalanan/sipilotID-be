@@ -19,7 +19,7 @@ class FormSeeder extends Seeder
             'technologies',
             'city',
         ];
-        Form::factory(10)->create();
+        Form::factory(30)->create();
         // Form::factory()->times(25)
         //     ->has(FormQuestion::factory()->count(rand(3, 12)), 'questions')
         //     ->create()->each(function ($item, $key) use ($media_cat) {

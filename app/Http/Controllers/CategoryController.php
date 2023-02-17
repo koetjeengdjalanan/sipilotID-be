@@ -16,7 +16,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $res = Category::all()->sortByDesc('updated_at')->paginate();
+        $res = Category::withCount('posts')->orderBy('posts_count')->paginate();
         return ApiResponse::success('', new CategoriesPaginateCollection($res));
     }
 

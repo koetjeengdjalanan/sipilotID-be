@@ -32,13 +32,13 @@ class FormController extends Controller
      */
     public function adminIndex()
     {
-        $perPage              = request()->filled('perPage') ? request()->perPage : null;
-        $query                = Form::with(['author', 'media']);
+        $perPage              = request()->filled('perPage') ? request()->perPage : 9;
+        $query                = Form::with(['author', 'media'])->withTrashed();
         (bool) $publishFilter = request()->published_only;
         if ($publishFilter === 'true') {
             $query = $query->whereNotNull('published_date');
         }
-        $res = $query->orderByDesc('updated_at')->paginate($perPage);
+        $res = $query->orderByDesc('created_at')->paginate($perPage);
         return ApiResponse::success('', new FormPaginateCollection($res));
     }
 

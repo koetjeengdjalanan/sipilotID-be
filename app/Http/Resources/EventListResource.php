@@ -20,6 +20,7 @@ class EventListResource extends JsonResource
             'id'           => $data['id'] ?? null,
             'title'        => $data['title'] ?? null,
             'slug'         => $data['slug'] ?? null,
+            'blog_url'     => $data['blog_url'] ?? null,
             'excerpt'      => $data['excerpt'] ?? null,
             'publish_date' => (int) $data['publish_date'] ?? null,
             'expire'       => (int) $data['expire'] ?? null,
