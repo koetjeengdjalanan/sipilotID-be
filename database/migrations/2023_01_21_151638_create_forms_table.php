@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->nullable();
             $table->string('blog_url')->nullable();
-            $table->foreignUuid('user_id')->constrained();
+            $table->foreignUuid('user_id')->nullable()->constrained()->nullOnDelete();
             $table->text('description');
             $table->string('excerpt');
             $table->timestamp('publish_date')->nullable();
