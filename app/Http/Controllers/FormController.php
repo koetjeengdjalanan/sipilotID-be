@@ -110,6 +110,7 @@ class FormController extends Controller
             'user_id'      => $req['user_id'],
             'title'        => $req['title'],
             'slug'         => $req['slug'],
+            'blog_url'     => $req['blog_url'],
             'excerpt'      => $req['excerpt'],
             'description'  => $req['description'],
             'publish_date' => Carbon::createFromTimestamp($req['publish_date'])->format("Y-m-d H:i:s"),

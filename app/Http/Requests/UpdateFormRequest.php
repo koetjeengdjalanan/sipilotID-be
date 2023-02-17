@@ -28,6 +28,7 @@ class UpdateFormRequest extends FormRequest
             'user_id'      => 'required|uuid|exists:App\Models\User,id',
             'title'        => 'required|string',
             'slug'         => 'required|url',
+            'blog_url'     => 'required|url',
             'excerpt'      => 'required|string',
             'description'  => 'required|string',
             'publish_date' => 'numeric',
