@@ -53,6 +53,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['api', 'au
         Route::post('store', [PostController::class, 'store'])->name('store');
         Route::get('publish', [PostController::class, 'publish'])->name('publish');
         Route::post('edit', [PostController::class, 'edit'])->name('edit');
+        Route::group(['middleware' => ['role:Super Admin']], function () {
+            Route::delete('delete', [PostController::class, 'destroy'])->name('delete');
+            Route::delete('delete/permanent', [PostController::class, 'annihilate'])->name('annihilate');
+        });
         Route::group(['prefix' => 'assign', 'as' => 'assign.'], function () {
             Route::post('tags', [TagController::class, 'store'])->name('store');
             Route::post('media', [MediaController::class, 'storePost'])->name('media');
@@ -109,6 +113,7 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.', 'middleware' => 'api'], funct
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('refresh_token', [AuthController::class, 'refreshToken'])->name('refresh_token');
     Route::get('profile', [AuthController::class, 'user'])->name('profile');
+    Route::put('update', [AuthController::class, 'update'])->name('update');
     Route::post('change-password', [AuthController::class, 'changePassword'])->name('change-password');
 });
 

@@ -9,12 +9,16 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostPaginateCollection;
 use App\Http\Resources\PostResource;
 use App\Libraries\ApiResponse;
+use App\Models\Media;
 use App\Models\Post;
+use App\Models\Tag;
+use Arr;
 use Carbon\Carbon;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\Searchable\ModelSearchAspect;
 use Spatie\Searchable\Search;
+use Str;
 
 class PostController extends Controller
 {
@@ -25,13 +29,13 @@ class PostController extends Controller
                 ->whereNotNull('published_date')
                 ->with(['tags', 'author', 'category', 'media'])
                 ->allowedFilters([
-                    AllowedFilter::partial('title'), 
-                    AllowedFilter::partial('body'), 
-                    AllowedFilter::exact('tags.title'), 
-                    AllowedFilter::exact('tags.slug'), 
-                    AllowedFilter::exact('author.name'), 
-                    AllowedFilter::exact('author.slug'), 
-                    AllowedFilter::exact('category.title'), 
+                    AllowedFilter::partial('title'),
+                    AllowedFilter::partial('body'),
+                    AllowedFilter::exact('tags.title'),
+                    AllowedFilter::exact('tags.slug'),
+                    AllowedFilter::exact('author.name'),
+                    AllowedFilter::exact('author.slug'),
+                    AllowedFilter::exact('category.title'),
                     AllowedFilter::exact('category.slug'),
                 ])
                 ->defaultSorts('-updated_at')
@@ -110,7 +114,24 @@ class PostController extends Controller
 
     public function store(Post $post, StorePostRequest $storePostRequest)
     {
-        $res = $post->create($storePostRequest->validated());
+        $data     = $storePostRequest->validated();
+        $tags     = $data['tags'];
+        $media    = new Media(['path' => $storePostRequest->validated()['thumbnail']]);
+        $tagArray = [];
+        Arr::forget($data, ['tags', 'thumbnail']);
+        foreach ($tags as $key => $value) {
+            $q = Tag::firstOrCreate([
+                'slug' => Str::slug($value),
+            ], [
+                'title'   => $value,
+                'user_id' => auth()->user()->id,
+            ]);
+            array_push($tagArray, $q->id);
+        };
+        $res = $post->create($data);
+        $res->tags()->sync($tagArray);
+        $res->media()->save($media);
+        // return ApiResponse::created('Post Created Successfully', new PostResource($post->whereId($res->id)->with(['tags', 'media'])->first()));
         return ApiResponse::created('Post Created Successfully', $res);
     }
 
@@ -150,7 +171,7 @@ class PostController extends Controller
 
     public function destroy(Post $post, DeletePostRequest $deletePostRequest)
     {
-        $res = $post->whereId($deletePostRequest->validated()['post_id'])->deleteOrFail();
+        $res = $post->firstWhere('id', $deletePostRequest->validated()['post_id'])->deleteOrFail();
         return ApiResponse::success('post deleted', ['deleted' => $res]);
     }
 

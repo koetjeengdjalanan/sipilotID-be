@@ -50,6 +50,18 @@ services:
       - coreSystemNetwork
     restart: unless-stopped
 
+  mariaDB:
+    image: mariadb:10.3.37
+    ports:
+      - '21106:3306'
+    volumes:
+      - mariaDBVolumes:/var/lib/mysql
+    networks:
+      - coreSystemNetwork
+    environment:
+      MARIADB_ROOT_PASSWORD: testing123
+      MARIADB_DATABASE: mscms
+
 networks:
   coreSystemNetwork:
     name: coreSystemNetwork
@@ -59,4 +71,6 @@ volumes:
   dbVolumes:
     driver: local
   redisVolumes:
+    driver: local
+  mariaDBVolumes:
     driver: local

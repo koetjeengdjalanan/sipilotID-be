@@ -28,6 +28,8 @@ class StorePostRequest extends FormRequest
             "slug"           => 'required|unique:posts,slug|alpha_dash',
             "user_id"        => 'required|exists:users,id|uuid',
             "category_id"    => 'required|exists:categories,id|uuid',
+            "tags"           => 'sometimes|nullable|array',
+            "thumbnail"      => 'sometimes|nullable|url',
             "excerpt"        => 'required',
             "body"           => 'required',
             "published_date" => 'numeric',

@@ -33,7 +33,7 @@ class FormController extends Controller
     public function adminIndex()
     {
         $perPage              = request()->filled('perPage') ? request()->perPage : 9;
-        $query                = Form::with(['author', 'media'])->withTrashed();
+        $query                = Form::with(['author', 'media']);
         (bool) $publishFilter = request()->published_only;
         if ($publishFilter === 'true') {
             $query = $query->whereNotNull('published_date');
@@ -131,6 +131,7 @@ class FormController extends Controller
     public function destroy(Request $request)
     {
         $res = Form::find($request->id);
+        // dd($res);
         if (empty($res)) {
             return ApiResponse::unprocessableEntity('Param Required ID', ['tips' => 'perhaps your input is missed type']);
         }

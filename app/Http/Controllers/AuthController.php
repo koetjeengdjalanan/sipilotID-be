@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthLoginRequest;
 use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\LoginResource;
 use App\Http\Resources\UserProfileResource;
 use App\Libraries\ApiResponse;
@@ -94,5 +95,14 @@ class AuthController extends Controller
             $mail->to($currentUser->email)->subject('New Password')
         );
         return ApiResponse::success('', 'Check User Email for Future Instruction');
+    }
+
+    public function update(UpdateUserRequest $updateUserRequest, User $user)
+    {
+        $data = $user->firstWhere('id', auth()->user()->id);
+        $req  = collect($updateUserRequest->validated())->except(['id']);
+        dd($req);
+        $res = $data->updateOrFail($req->toArray());
+        return ApiResponse::success($res);
     }
 }
