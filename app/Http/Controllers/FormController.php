@@ -69,8 +69,8 @@ class FormController extends Controller
             'slug'         => $req['slug'],
             'excerpt'      => $req['excerpt'],
             'description'  => $req['description'],
-            'publish_date' => Carbon::createFromTimestamp($req['publish_date'])->format("Y-m-d H:i:s"),
-            'expire'       => Carbon::createFromTimestamp($req['expire'])->format("Y-m-d H:i:s"),
+            'publish_date' => isset($data['publish_date']) ? Carbon::createFromTimestamp($req['publish_date'])->format("Y-m-d H:i:s") : null,
+            'expire'       => isset($data['expire']) ? Carbon::createFromTimestamp($req['expire'])->format("Y-m-d H:i:s") : null,
         ])->saveOrFail();
         if (!$res) {
             return ApiResponse::error('Something Went Wrong', ['tips' => 'Check your input and/or validation']);

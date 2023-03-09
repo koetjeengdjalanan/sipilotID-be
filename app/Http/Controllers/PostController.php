@@ -31,6 +31,8 @@ class PostController extends Controller
                 ->allowedFilters([
                     AllowedFilter::partial('title'),
                     AllowedFilter::partial('body'),
+                    AllowedFilter::partial('slug'),
+                    AllowedFilter::exact('id'),
                     AllowedFilter::exact('tags.title'),
                     AllowedFilter::exact('tags.slug'),
                     AllowedFilter::exact('author.name'),
@@ -65,6 +67,28 @@ class PostController extends Controller
     public function show(Post $post, string $slug)
     {
         $query = $post->whereSlug($slug)->with(['tags', 'author', 'category', 'media'])->first();
+        if (empty($query)) {
+            return ApiResponse::notFound('post not found!', ['tips' => 'Find details here ' . route('post.index')]);
+        }
+        if (env('APP_ENV', 'local') !== 'local') {
+            visits($query)->increment();
+        } else if (!env('NUMPANG', true)) {
+            visits($query)->forceIncrement(rand(3, 20));
+        }
+        $res = new PostResource($query);
+        return ApiResponse::success('', $res);
+    }
+
+    /**
+     * @author Martin Sambulare <martin@rakhasa.com>
+     * Show one Posts, Based on id
+     *
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showId(Post $post, string $id)
+    {
+        $query = $post->whereId($id)->with(['tags', 'author', 'category', 'media'])->first();
         if (empty($query)) {
             return ApiResponse::notFound('post not found!', ['tips' => 'Find details here ' . route('post.index')]);
         }

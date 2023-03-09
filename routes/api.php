@@ -50,6 +50,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['api', 'au
     });
     Route::group(['prefix' => 'post', 'as' => 'post.'], function () {
         Route::get('list', [AdminPanelController::class, 'postList'])->name('list');
+        Route::get('show/{slug}', [PostController::class, 'show'])->name('show');
+        Route::get('show-id/{id}', [PostController::class, 'showId'])->name('show.id');
         Route::post('store', [PostController::class, 'store'])->name('store');
         Route::get('publish', [PostController::class, 'publish'])->name('publish');
         Route::post('edit', [PostController::class, 'edit'])->name('edit');

@@ -32,7 +32,7 @@ class StorePostRequest extends FormRequest
             "thumbnail"      => 'sometimes|nullable|url',
             "excerpt"        => 'required',
             "body"           => 'required',
-            "published_date" => 'numeric',
+            "published_date" => 'sometimes|nullable|numeric',
         ];
     }
 
@@ -47,8 +47,8 @@ class StorePostRequest extends FormRequest
     public function validated($key = null, $default = null)
     {
         $data = data_get($this->validator->validated(), $key, $default);
-        return array_merge($data, [
+        return (isset($data['published_date']) && $data['published_date'] != null) ? array_merge($data, [
             'published_date' => date('Y-m-d H:i:s', $data['published_date']),
-        ]);
+        ]) : $data;
     }
 }

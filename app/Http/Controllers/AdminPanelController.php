@@ -102,6 +102,8 @@ class AdminPanelController extends Controller
                 ->allowedFilters(['title', 'body', 'tags.title', 'tags.slug', 'author.name', 'author.slug', 'category.title', 'category.slug',
                     AllowedFilter::scope('published_before'),
                     AllowedFilter::scope('is_draft'),
+                    AllowedFilter::partial('slug'),
+                    AllowedFilter::exact('id'),
                 ])
                 ->defaultSorts('-updated_at')
                 ->allowedSorts(['published_date', 'updated_at', 'title', 'author.name', 'author.slug'])
