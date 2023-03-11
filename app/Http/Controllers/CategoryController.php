@@ -26,7 +26,7 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     function list() {
-        $res = Category::with('author')->paginate();
+        $res = Category::with('author', 'author.media')->paginate();
         return ApiResponse::success('', $res);
     }
 
