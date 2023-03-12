@@ -19,6 +19,7 @@ class UserProfileResource extends JsonResource
         return [
             'id'       => $data['id'],
             'name'     => $data['name'],
+            'username' => $data['username'],
             'email'    => $data['email'],
             'imageUrl' => $data['media']['path'],
             'role'     => Arr::pluck($data['roles'], 'name'),
