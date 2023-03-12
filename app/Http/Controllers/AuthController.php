@@ -101,8 +101,7 @@ class AuthController extends Controller
     {
         $data = $user->firstWhere('id', auth()->user()->id);
         $req  = collect($updateUserRequest->validated())->except(['id']);
-        dd($req);
-        $res = $data->updateOrFail($req->toArray());
-        return ApiResponse::success($res);
+        $res  = $data->updateOrFail($req->toArray());
+        return ApiResponse::success('', $res);
     }
 }
